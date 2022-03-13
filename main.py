@@ -239,7 +239,7 @@ class MIDI_Blender:
         print_line('write_tracks')
 
         delay_array = np.arange(int(delay * self.wave_file.frame_rate / 1000)) / (
-                    delay * self.wave_file.frame_rate / 1000)
+                delay * self.wave_file.frame_rate / 1000)
         delay_array = np.exp(-3 * delay_array)
         delay_array = delay_array - np.min(delay_array)
         delay_array = delay_array / np.max(delay_array)
@@ -270,7 +270,8 @@ class MIDI_Blender:
                 self.tracks_88[key][frame_start:int(frame_start + self.wave_file.keys_frames_framerate[key][0])] \
                     = self.wave_file.keys_wave[key] * (sign_key_event[3] / 127)
                 self.tracks_88[key][frame_start:frame_start + 100] *= (np.arange(100) / 100)
-                self.tracks_88[key][int(frame_start + self.wave_file.keys_frames_framerate[key][0]) - 500:int(frame_start + self.wave_file.keys_frames_framerate[key][0])] *= \
+                self.tracks_88[key][int(frame_start + self.wave_file.keys_frames_framerate[key][0]) - 500:int(
+                    frame_start + self.wave_file.keys_frames_framerate[key][0])] *= \
                     np.power((1 - np.arange(500) / 500), 2)
                 continue
 
@@ -278,7 +279,7 @@ class MIDI_Blender:
                 self.tracks_88[key][frame_start:frame_start + int(delay * self.wave_file.frame_rate / 1000)] *= \
                     delay_array * (sign_key_event[3] / 127) + (127 - sign_key_event[3]) / 127
                 self.tracks_88[key][frame_start + int(delay * self.wave_file.frame_rate / 1000):] *= (
-                            sign_key_event[3] / 127)
+                        sign_key_event[3] / 127)
 
     def wave_write(self, file_name):
         self.tracks_88_combine = np.sum(self.tracks_88, axis=0)
@@ -286,7 +287,7 @@ class MIDI_Blender:
         wavfile.write(file_name, self.frame_rate, self.tracks_88_combine)
         print_line('导出完成')
 
-    def __init__(self, midi_file=MIDI_file(), wave_file=WAVE_88_file()):
+    def __init__(self, midi_file: MIDI_file, wave_file: WAVE_88_file):
         self.midi_file = midi_file
         self.wave_file = wave_file
         self.frame_rate = self.wave_file.frame_rate  # 合成器帧率
